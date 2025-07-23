@@ -1,0 +1,365 @@
+﻿DAY 2 of Network Engineer:
+whatismyipaddress.com
+Master ipv4 and ipv6:
+Routing Protocols and Concepts
+2 Weeks vs 1 hour:
+Step 1: Change your brain/eyes
+UtakTao
+0-9
+4000
+3999
+4000
+8000
+7999
+8001
+5998
+5999
+6000
+1098
+1099
+1100
+2908
+2909
+2910
+UtakIPv4
+0-255
+4.0.0.0
+4.0.0.1
+3.255.255.255
+7.255.255.255
+8.0.0.0
+8.0.0.1
+5.255.255.254
+5.255.255.255
+6.0.0.0
+1.0.255.254
+1.0.255.255
+1.1.0.0
+2.255.0.254
+2.255.0.255
+2.255.1.0
+UtakIPv6
+0-9,a-f
+:4000:
+:3fff:
+:4001:
+:7fff:
+:8000:
+:8001:
+:5ffe:
+:5fff:
+:6000:
+:10fe:
+:10ff:
+:1100:
+2f0e
+2f0f
+2f10
+
+BitLength Exercise
+
+52 8
+53 4
+54 11
+55 11
+56 12
+57 2
+58 9
+59 10
+60 4 
+61 8 
+62 13
+63 7
+64 15
+65 6
+
+1999
+1.255.255.255
+:1fff:
+
+2000
+2.0.0.0
+:2000:
+
+2001
+2.0.0.1
+:2001:
+
+Subnetting
+Divide to smaller pieces
+Equal and Unequal Subnetting
+Task3: How to subnet for network engineers
+Ex1. Accenture.com network 10.0.0.0/8 [16m] needs a smaller subnet of only 1500 Agents, QA, TLs, PM.
+C - convert it : 1500 is 11b
+S - subtract it : /32 - /11 = /21 *3rd* **8i**
+i - ipasok sa hiwa : ipasok **8i** sa *3rd* hiwa 10.0.8.0
+Accenture.com: 10.0.8.0/21
+1st: +1 10.0.8.1
+last: -1 10.0.15.255
+notAccenture.com: 10.10.16.0/21
+
+~~~~
+
+Ex2. SYKES.com network 10.0.0.0/8 [16m] needs a smaller subnet of only 1500 Agents, QA, TLs, PM.
+C - convert it : 2500 is 12b
+S - subtract it : /32 - /12 = /20 *3rd* *16i**
+i - ipasok sa hiwa : ipasok **16i** sa *3rd* hiwa 10.0.16.0
+SYKES.com: 10.0.16.0/20
+1st: +1 10.0.16.1
+last: -1 10.0.31.255
+notSYKES.com: 10.10.32.0/20
+
+Ex3. FOUNDEVER.com network 10.0.0.0/8 [16m] needs a smaller subnet of only 1500 Agents, QA, TLs, PM.
+C - convert it : 750 is 10b
+S - subtract it : /32 - /10 = /22 *3rd* *4i**
+i - ipasok sa hiwa : ipasok **8i** sa *3rd* hiwa 10.0.4.0
+FOUNDEVER.com: 10.0.4.0/22
+1st: +1 10.0.4.1
+last: -1 10.0.7.255
+notFOUNDEVER.com: 10.10.8.0/22
+
+Ex4. ELETECARE.com network 10.0.0.0/8 [16m] needs a smaller subnet of only 1500 Agents, QA, TLs, PM.
+C - convert it : 5000 is 13b
+S - subtract it : /32 - /13 = /19 *3rd* *32i**
+i - ipasok sa hiwa : ipasok **32i** sa *3rd* hiwa 10.0.32.0
+ETELECARE.com: 10.0.32.0/19
+1st: +1 10.0.32.1
+last: -1 10.0.63.255
+notETELECARE.com: 10.10.64.0/19
+
+Ultra Instinct Method
+10.0.0.32/27
+10.0.0.33/27
+10.0.0.61/27
+10.0.0.64/27
+
+ANDOKS LECHON
+12 Agents
+10.0.0.16/28
+10.0.0.17/28
+10.0.0.31/28
+10.0.0.32/28
+
+TemPlate_CoreSW:
+@D1: ACCENTURE
+config t
+vlan 60
+ name PETRON.com
+ exit
+Int vlan 60
+ ip ospf 1 area 0
+ no shut
+ ip add 172.16.16.1 255.255.240.0
+ip dhcp excluded-add 172.16.16.1 172.16.16.50
+ip dhcp pool PETRON.com
+ network 172.16.16.0 255.255.240.0
+ default-router 172.16.16.0
+ domain-name PETRON.com
+ dns-server 10.52.1.10
+ option 150 ip 10.52.100.8
+ Int Fa 0/7
+  swi Voice vlan 60
+  do sh ip dhcp binding
+end
+
+RealWorld subnet for MSP[HIRING]
+sUBNET 172.16.0.0/16 FOR petron.com
+with 2800 Empployees;
+172.16.16.0/20
+172.16.16.1/20
+172.16.31.255/20
+172.16.32.255/20
+
+SA BAHAY MO HOME HAYUP LAB:
+config t
+vlan 60
+ name PETRON.com
+ exit
+Int vlan 60
+ ip ospf 1 area 0
+ no shut
+ ip add 172.16.16.1 255.255.240.0
+ip dhcp excluded-add 172.16.16.1 172.16.16.50
+ip dhcp pool PETRON.com
+ network 172.16.16.0 255.255.240.0
+ default-router 172.16.16.0
+ domain-name PETRON.com
+ dns-server 10.52.1.10
+ option 150 ip 10.52.100.8
+@A1:
+config t
+ Int e0/0
+  swi mode access
+  swi access vlan 60
+  do sh ip dhcp binding
+@P1:
+config t
+ Int e0/0
+ no shut
+ ip address dhcp
+ do bp
+
+REAL WORLD EXAMPLE NO.2 SHELL.COM
+10.63.0.0/16 5000 Employees
+10.63.32.0/19
+10.63.32.1/19
+10.63.63.255/19
+10.63.64.0/19
+
+SA BAHAY MO HOME HAYUP LAB:
+@D1
+config t
+vlan 63
+ name SHELL.com
+ exit
+Int vlan 63
+ ip ospf 1 area 0
+ no shut
+ ip add 10.63.32.1 255.255.224.0
+ip dhcp excluded-add 10.63.32.1 10.63.32.50
+ip dhcp pool SHELL.com
+ network 10.63.32.0 255.255.224.0
+ default-router 10.63.32.1
+ domain-name SHELL.com
+ dns-server 10.52.1.10
+ option 150 ip 10.52.100.8
+
+@A2:
+config t
+ Int e1/0
+  swi mode access
+  swi access vlan 63
+  do sh ip dhcp binding
+@P2:
+config t
+ Int e1/0
+ no shut
+ ip address dhcp
+ do bp
+
+US EMBASSY
+10.74.4.0/16
+25 servers
+vlan 74
+
+
+10.7.4.32/27
+10.7.4.33 255.255.255.224
+10.7.4.61 255.255.255.224
+10.7.4.62
+@D1
+config t
+vlan 74
+ name USEMBASSY.com
+ exit
+Int vlan 74
+ ip ospf 1 area 0
+ no shut
+ ip add 10.7.4.33 255.255.255.224
+ip dhcp excluded-add 10.7.4.33 10.7.4.35
+ip dhcp pool USEMBASSY.com
+ network 10.7.4.32 255.255.255.224
+ default-router 10.7.4.33
+ domain-name USEMBASSY.com
+ dns-server 10.52.1.10
+ option 150 ip 10.52.100.8
+
+@D2:
+config t
+ Int e1/0
+  swi mode access
+  swi access vlan 74
+  do sh ip dhcp binding
+@S2:
+config t
+ Int e1/0
+ no shut
+ ip address dhcp
+ do bp
+
+HOMEWORK
+D1
+A1
+P1
+JUMPMAN23.COM
+2300 HOSTS
+VLAN 23
+10.23.0.0/16
+12b
+10.23.16.0/20 255.255.240.0
+10.23.16.1 255.255.240.0
+10.23.31.255
+10.23.32.0
+
+
+D1
+config t
+vlan 23
+ name JUMPMAN23.com
+ exit
+Int vlan 23
+ ip ospf 1 area 0
+ no shut
+ ip add 10.23.16.1 255.255.240.0
+ip dhcp excluded-add 10.23.16.1 10.23.16.50
+ip dhcp pool JUMPAN23.com
+ network 10.23.16.0 255.255.240.0
+ default-router 10.23.16.1
+ domain-name JUMPMAN23.com
+ dns-server 10.52.1.10
+ option 150 ip 10.52.100.8
+A1
+config t
+ Int e0/0
+  swi mode access
+  swi access vlan 23
+  do sh ip dhcp binding
+P1
+config t
+ Int e0/0
+ no shut
+ ip address dhcp
+ do bp
+
+
+VLAN88
+BET88.COM
+10000 GAMING SERVERS
+10.88.0.0/16
+
+10.88.0.0/18
+10.88.64.0 255.255.192.0
+10.88.64.1 255.255.192.0
+10.88.127.255
+10.88.128.0
+D1
+
+config t
+vlan 88
+ name BET88.com
+ exit
+Int vlan 88
+ ip ospf 1 area 0
+ no shut
+ ip add 10.88.64.1 255.255.192.0
+ip dhcp excluded-add 10.88.64.1 10.88.64.50
+ip dhcp pool BET88.com
+ network 10.88.64.0 255.255.192.0
+ default-router 10.88.64.1
+ domain-name BET88.com
+ dns-server 10.52.1.10
+ option 150 ip 10.52.100.8
+
+D2
+config t
+ Int e1/0
+  swi mode access
+  swi access vlan 88
+  do sh ip dhcp binding
+
+S2
+config t
+ Int e1/0
+ no shut
+ ip address dhcp
+ do bp
