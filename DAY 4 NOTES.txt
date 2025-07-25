@@ -1,0 +1,274 @@
+EX 1: COMBINE 3 PREFIX INTO ONE SUPERNET
+172.16.0.0/16
+172.19.0.0/16
+= 172.16.0.0/14
+
+EX 2 COMBINE 3 PREFIX INTO ONE SUPERNET
+
+172.20.0.0/17
+172.23.0.0/17
+= 172.20.0.0/14
+
+CSMA/CD
+CSMA/CA
+
+PHYSICAL LAYER - BITS
+DATA LINK LAYER - FRAMES NOT LIMITED TO MAC ADDRESSES INCLUDING PREAMBLE
+FRAME CHECK SEQUENCE
+NETWORK LAYER - PACKETS
+TRANSPORT LAYER - NMAP -V = source ports
+nmap -sU = udp ports
+nestat -s -p tcp
+SESSION LAYER - EVERYTHING TRANSMISSION, TCP, UDP = established sessions
+PRESENTATION LAYER - Data streams
+RTP = Real Time Protocol
+monitor session 1 source interface fa0/3,fa0/5,fa0/7
+monitor session 1 destination interface fa0/1
+APPLICATION LAYER = End User Layer
+
+DENY 66.254.114.41
+DENY 66.254.114.238
+DENY 66.254.114.234
+DENY 66.254.114.234
+DENY 104.21.112.1
+DENY 104.21.55.88
+DENY 104.18.146.40
+DENY 208.77.20.35
+
+config t
+NO ip access-list standard NOPORNFAP
+ip access-list standard NOPORNFAP
+DENY 66.254.0.0 0.0.255.255
+DENY 104.21.0.0 0.0.255.255
+DENY 68.235.0.0 0.0.255.255
+DENY 104.17.0.0 0.0.255.255
+DENY 88.208.0.0 0.0.255.255
+DENY 208.77.0.0 0.0.255.255
+DENY 172.67.0.0 0.0.255.255
+Permit Any
+Int Gi 1
+ ip access-group NOPORNFAP in
+end
+
+Goberno: allow all Porn, for freedom of expression!
+config t
+Int gi 1
+ip access-group NOPORNFAP in
+end
+
+207.148.79.88
+config t
+NO ip access-list standard NOISKUL
+ip access-list standard NOISKUL
+DENY   172.67.0.0   0.0.255.255
+DENY   50.6.0.0   0.0.255.255
+DENY   184.168.0.0   0.0.255.255
+DENY   155.137.0.0   0.0.255.255
+DENY   207.148.0.0   0.0.255.255
+Permit Any
+Int Gi 1
+ ip access-group NOISKUL in
+end
+
+config t
+NO ip access-list standard NOTORS
+ip access-list standard NOTORS
+DENY   162.159.0.0   0.0.255.255
+DENY   172.67.0.0   0.0.255.255
+DENY   76.223.0.0   0.0.255.255
+DENY   104.21.0.0   0.0.255.255
+DENY   104.26.0.0   0.0.255.255
+DENY   164.215.0.0 0.0.255.255
+Permit Any
+Int Gi 1
+no ip access-group NOTORS in
+end
+www.thepiratebay.org   162.159.   104.21
+www.limetorrents.com    172.67.   84.32   104.21.
+www.freeanimeonline.com   76.223.  13.248
+www.torlock2.com   104.21.
+www.hentaisites.com 104.21.   
+www.iptorrents.com  104.26.   95.211.
+   protocol         hacker    victim       port
+
+ex.2: you are the admin for pogo sites: 
+Create and acl named WAF2
+www.web310.com open only ssh,dns, http
+www.web311.com open only telnet, ssh, https, ping/icmp => 7lines 
+  GOLDEN  FIREWALL FORMULA:  paloalto,fortinet,cisco,checkpoint.
+   protocol         hacker    victim       port
+config t
+Int Gi 3
+NO IP access-list Extended WAF2
+ Permit tcp Any host www.web310.com eq 22 log
+ Permit tcp Any host www.web310.com eq 53 log
+ Permit tcp Any host www.web310.com eq 80 log
+ Permit tcp Any host www.web311.com eq 23 log
+ Permit tcp Any host www.web311.com eq 22 log
+ Permit tcp Any host www.web311.com eq 443 log 
+ Permit icmp  Any host www.web311.com  log
+ Int Gi 3
+  ip access-list WAF2 in
+REMOVE FIREWALL:
+CONfig t
+ Int Gi 3
+  NO ip access-list WAF2 in
+end
+
+Ex 02: Create an Extended Access List named WAF3 permitting only the ff:
+www.web310.com allow only http, https, daytime, ssh
+www.web311.com allow only ping
+
+conf t
+int gi 3
+IP access-list Extended WAF3
+Permit tcp any host www.web310.com eq 13 log
+Permit tcp any host www.web310.com eq 443 log
+Permit tcp any host www.web310.com eq 80 log
+Permit tcp any host www.web310.com eq 22 log
+Permit icmp any host www.web311.com log
+end
+conf t
+int gi 3
+ip access-group WAF3 in
+end
+
+Ex.03: Create an Extended access list named WAF4 to allow only the ff:
+www.web310.com allow only Finger, DNS
+www.web311.com allow only HTTP, TELNET
+
+conf t
+int gi 3
+ip access-list extended WAF4
+Permit tcp any host www.web310.com eq 79 log
+Permit tcp any host www.web310.com eq 53 log
+Permit tcp any host www.web311.com eq 80 log
+Permit tcp any host www.web311.com eq 23 log
+end
+conf t
+int gi 3
+ip access-group WAF3 in
+end
+
+conf t
+int gi 3
+ip access-list extended FINALWAF5
+permit icmp any host www.web310.com
+permit tcp any host www.web310.com eq 9
+permit tcp any host www.web310.com eq 23
+permit tcp any host www.web311.com eq 19
+permit tcp any host www.web311.com eq 53
+permit tcp any host www.web311.com eq 123
+exit
+conf t
+int gi 3
+ip access-group FINALWAF5 in
+end
+
+conf t
+int gi 3
+no ip access-list extended FINALWAF5
+int gi 3
+no ip access-group FINALWAF5 in
+end
+conf t
+int gi 3
+no ip access-list extended WAF3
+int gi 3
+no ip access-group WAF3 in
+end
+conf t
+int gi 3
+no ip access-list extended WAF4
+int gi 3
+no ip access-group WAF4 in
+end
+
+
+VPN
+AES-CBC
+CBC = Chain Block Cypher
+Encryption
+AES-GCM
+GCM = Galois Control Mode
+Authenticated encryption
+1. Authentication
+2. DH Key Public and Private
+3. 
+DH - Diffie-Hellman
+
+config t
+int gi 1
+ip nat OUTSIDE
+int gi 2
+ip nat INSIDE
+int gi 3
+ip nat INSIDE
+no access-list 8
+access-list 8 permit 192.168.102.0 0.0.0.255
+access-list 8 permit 192.168.103.0 0.0.0.255
+ip nat inside source list 8 interface Gi 1 overload
+ip nat inside source static 192.168.103.21 208.8.8.51
+ip nat inside source static 192.168.103.22 208.8.8.52
+end
+
+NAT
+conf t
+no ip nat inside source list 8 interface Gi 1 overload
+no ip nat inside source static 192.168.103.21 208.8.8.51
+no ip nat inside source static 192.168.103.22 208.8.8.52
+no access-list 8
+access-list 8 permit any
+Int Gi 3
+ ip nat Inside
+Int gi 1
+ ip nat Outside
+no IP Nat inside source static tcp 192.168.103.21 80 208.8.8.101 8080
+no IP Nat inside source static tcp 192.168.103.21 443 208.8.8.101 8443
+no IP Nat inside source static tcp 192.168.103.21 22 208.8.8.101 8069
+no IP Nat inside source static tcp 192.168.103.22 80 208.8.8.102 8080
+no IP Nat inside source static tcp 192.168.103.22 443 208.8.8.102 8443
+no IP nat inside source list 8 int gi 1 Overload
+end
+
+conf t
+no ip nat inside source list 8 interface Gi 1 overload
+no ip nat inside source static 192.168.103.21 208.8.8.51
+no ip nat inside source static 192.168.103.22 208.8.8.52
+access-list 8
+access-list 8 permit any
+Int Gi 3
+ ip nat Inside
+Int gi 1
+ ip nat Outside
+IP Nat inside source static tcp 192.168.103.21 80 208.8.8.101 8080
+IP Nat inside source static tcp 192.168.103.21 443 208.8.8.101 8443
+IP Nat inside source static tcp 192.168.103.21 22 208.8.8.101 8069
+IP Nat inside source static tcp 192.168.103.22 80 208.8.8.102 8080
+IP Nat inside source static tcp 192.168.103.22 443 208.8.8.102 8443
+IP Nat inside source static tcp 192.168.103.23 80 208.8.8.103 8080
+IP Nat inside source static tcp 192.168.103.23 443 208.8.8.103 8443
+IP nat inside source list 8 int gi 1 Overload
+end
+clear ip nat translation *
+
+conf t
+no ip nat inside source list 8 interface Gi 1 overload
+no ip nat inside source static 192.168.103.21 208.8.8.51
+no ip nat inside source static 192.168.103.22 208.8.8.52
+access-list 8
+access-list 8 permit any
+Int Gi 3
+ ip nat Inside
+Int gi 1
+ ip nat Outside
+no IP Nat inside source static tcp 192.168.103.21 80 208.8.8.101 8080
+no IP Nat inside source static tcp 192.168.103.21 443 208.8.8.101 8443
+no IP Nat inside source static tcp 192.168.103.21 22 208.8.8.101 8069
+no IP Nat inside source static tcp 192.168.103.22 80 208.8.8.102 8080
+no IP Nat inside source static tcp 192.168.103.22 443 208.8.8.102 8443
+no IP Nat inside source static tcp 192.168.103.23 80 208.8.8.103 8080
+no IP Nat inside source static tcp 192.168.103.23 443 208.8.8.103 8443
+no IP nat inside source list 8 int gi 1 Overload
+end
+clear ip nat translation *
